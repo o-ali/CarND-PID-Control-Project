@@ -11,7 +11,7 @@ using json = nlohmann::json;
 constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
 double rad2deg(double x) { return x * 180 / pi(); }
-
+void moveCar(double cte, double steer, double throttle, uWS::WebSocket<uWS::SERVER> ws);
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
 // else the empty string "" will be returned.
@@ -33,6 +33,15 @@ int main()
   uWS::Hub h;
 
   PID pid;
+  //(P, I, D)
+  //P: How hard to steer back to center of road
+  //I: Pull left or right if wheels not aligned
+  //D: Use to avoid oscillating too much around center
+
+  //pid.Init(0.2, 0.004, 3.0); throttle = 0.08 works, avg speed 7.5 mph :|
+
+  pid.Init( 0.1, 0.01, 4.5);
+  
   // TODO: Initialize the pid variable.
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -46,6 +55,7 @@ int main()
         auto j = json::parse(s);
         std::string event = j[0].get<std::string>();
         if (event == "telemetry") {
+
           // j[1] is the data JSON object
           double cte = std::stod(j[1]["cte"].get<std::string>());
           double speed = std::stod(j[1]["speed"].get<std::string>());
@@ -57,16 +67,21 @@ int main()
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
-          
+
+          pid.UpdateError(cte);
+          steer_value = pid.TotalError();
+          //moveCar(cte, steer_value, 0.5, ws);
+
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          msgJson["throttle"] = .5;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+
         }
       } else {
         // Manual driving
@@ -111,4 +126,18 @@ int main()
     return -1;
   }
   h.run();
+}
+
+void moveCar(double cte, double steer, double throttle, uWS::WebSocket<uWS::SERVER> ws)
+{
+  // DEBUG
+  std::cout << "CTE: " << cte << " Steering Value: " << steer << std::endl;
+
+  json msgJson;
+  msgJson["steering_angle"] = steer;
+  msgJson["throttle"] = throttle;
+  auto msg = "42[\"steer\"," + msgJson.dump() + "]";
+  std::cout << msg << std::endl;
+  ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+
 }
