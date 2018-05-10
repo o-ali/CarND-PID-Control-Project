@@ -19,8 +19,9 @@ void PID::Init(double Kp, double Ki, double Kd) {
     i_error = 0;
     d_error = 0;
     twiddle = false;
-    best_error = 999999;
-    dp = {0.1*Kp,0.1*Kd,0.1*Ki};
+    error = 0;
+    best_error = 9999999;
+    dp = {Kp*.1,Ki*.1,Kd*.1};
     p =  {Kp,Ki,Kd};
     i = 0;
     check = true;
@@ -33,21 +34,24 @@ void PID::UpdateError(double cte) {
     p_error = cte;
     i_error += cte;
 
-    double error = cte;
-    if(step == 100 && twiddle)
+    /*Note: twiddle affected heavly by simulator/computer performance*/
+	/*dont run until the 1000th step, then accumulate over 500 steps and run every 500*/
+    /*accumulate the error over some time then twiddle*/
+    if(twiddle && (step % 500 == 0) && step > 999)
     {
-        cout << "-------Step: " << step << endl;
-
+        cout << "PRE: " << Kp << "---" << Ki << "---" << Kd << endl;
         if(error < best_error)
         {
             best_error = error;
             dp[i] *= 1.1;
             check = true;
+            //cout << "IF 1" << endl;
         }
         else
         {
             p[i] -= 2 * dp[i];
-            check = false; 
+            check = false;
+            //cout << "ELSE 1" << endl;
         }
         if(!check)
         {
@@ -55,22 +59,26 @@ void PID::UpdateError(double cte) {
             {
                 best_error = error;
                 dp[i] *= 1.1;
+                //cout << "IF 2" << endl;
             }
             else
             {
                 p[i] += dp[i];
                 dp[i] *=.9;
+                //cout << "ELSE 2" << endl;
             }
             check = true;
         }
 
         i = (i + 1) % 3;
-        this->Kp += p[0];
-        this->Kd += p[2];
-        this->Ki += p[1];
-        cout << Kp << "---" << Ki << "---" << Kd << endl;
-        step = 0;
+        this->Kp = p[0];
+        this->Ki = p[1];
+        this->Kd = p[2];
+        cout << "POST: " << Kp << "---" << Ki << "---" << Kd << endl;
+        error = 0;
     }
+    else
+    	error += fabs(cte);
 
     step++;
 }

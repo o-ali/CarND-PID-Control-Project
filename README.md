@@ -1,6 +1,24 @@
 # CarND-Controls-PID
 Self-Driving Car Engineer Nanodegree Program
 
+## Observations
+The project was implemented with a simple PID controller using Total_Error = (-Kp * p_error) - (Kd * d_error) - (Ki * i_error) to direct the steering with a constant throttle of .71 resulting in speeds up to 75 mph.
+During implementation the P, I, and D values were manually adjusted with some help from a 'twiddle' function (bad :( implementation). I initially started with values given in the course which were P=0.2 I=0.004 and D=3.0 then a few twiddle runs resulted in values around P=.19 I=0.008 and D=10, before it started to mess up too badly. From there I started to adjust and test the variable by making small adjustments to them and running the simulator without twiddle.
+While adjusting, I realized that the P value increase would make the car shoot back into the middle to correct the CTE more aggresively and result in the car overshooting the sides, a lower value would still allow it to adjust but with a more moderate change. So I ended up with P=0.079.
+The I value appeared to cause the vehicle to 'slide' left and right and helped to move the car toward the center while it was making turns, it was however very sensitive to any changes so the I value needed to be a small number, so I set it to 0.0013.
+The D value controls how much the car will make the small adjustments to stay in the middle. Large D values would result in the steering constantly going from 25 to -25 in a loop even while the car was somewhat centered. It did however help control the car in the middle to stop it from overshooting due to the P value so I settled with the value of 7.2.
+
+In the /Outputs/ folder there are a few sample videos to show different configurations that I tested, including the final config. The car performs well even at the high speeds, even making the hard turns at the high speeds. However the wheel does sometimes go over the edge a bit and that could be improved in the future with some more adjustments (a better twiddle) and controlling the speed/throttle instead of having a set throttle.
+Extra runs in the Output folder:
+"P-0_9 I-0 D-11_7.GIF" -> P=0.09, I=0, D=11.7
+"P-0_105 I-0 D-7_9.GIF" -> P=.105 I=0, D=7.9
+"P-0_097 I-0 D-5_9.GIF" -> P=0.097, I=0, D=5.9
+
+Final Variables Results: "P-0_079 I-0-0013 D-7_2.GIF" -> P=0.079, I=0.0013, D=7.2
+
+[GIF HERE]
+
+
 ---
 
 ## Dependencies

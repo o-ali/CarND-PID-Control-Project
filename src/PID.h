@@ -24,6 +24,7 @@ public:
   int i;
   bool check;
   int step;
+  double error;
 
   /*
   * Constructor

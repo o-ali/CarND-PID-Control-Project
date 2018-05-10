@@ -35,12 +35,10 @@ int main()
   PID pid;
   //(P, I, D)
   //P: How hard to steer back to center of road
-  //I: Pull left or right if wheels not aligned
-  //D: Use to avoid oscillating too much around center
+  //I: Pull left or right if wheels not aligned (slides car left or right to correct CTE, larger value = more sliding)
+  //D: Use to avoid oscillating too much around center (larger the more frequent oscillations)
 
-  //pid.Init(0.2, 0.004, 3.0); throttle = 0.08 works, avg speed 7.5 mph :|
-
-  pid.Init( 0.1, 0.01, 4.5);
+  pid.Init(0.079, 0.0013, 7.2);
   
   // TODO: Initialize the pid variable.
 
@@ -77,7 +75,11 @@ int main()
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = .5;
+          //limit the speed on turns
+          if(steer_value > fabs(10) && speed > 45.0)
+          	msgJson["throttle"] = -15.5;
+          else
+          	msgJson["throttle"] = .71;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
