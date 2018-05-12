@@ -10,7 +10,7 @@ The D value controls how much the car will make the small adjustments to stay in
 
 In the /Outputs/ folder there are a few sample videos to show different configurations that I tested, including the final config. The car performs well even at the high speeds, even making the hard turns at the high speeds. However the wheel does sometimes go over the edge a bit and that could be improved in the future with some more adjustments (a better twiddle) and controlling the speed/throttle instead of having a set throttle.
 Extra runs in the Output folder:
-"P-0_9 I-0 D-11_7.GIF" -> P=0.09, I=0, D=11.7
+"P-0_9 I-0 D-11_7.GIF" -> P=0.067, I=0, D=10.7
 "P-0_105 I-0 D-7_9.GIF" -> P=.105 I=0, D=7.9
 "P-0_097 I-0 D-5_9.GIF" -> P=0.097, I=0, D=5.9
 

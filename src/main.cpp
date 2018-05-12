@@ -38,7 +38,8 @@ int main()
   //I: Pull left or right if wheels not aligned (slides car left or right to correct CTE, larger value = more sliding)
   //D: Use to avoid oscillating too much around center (larger the more frequent oscillations)
 
-  pid.Init(0.079, 0.0013, 7.2);
+  pid.Init(0.0797, 0.0013, 5.5);
+  std::cout << "P: " << pid.Kp << " I: " << pid.Ki << " D: " << pid.Kd << std::endl;
   
   // TODO: Initialize the pid variable.
 
