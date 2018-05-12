@@ -17,8 +17,6 @@ Extra runs in the Output folder:
 
 Final Variables Results -> P=0.0797, I=0.0013, D=5.5
 
-[GIF HERE]
-
 
 ---
 
