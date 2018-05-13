@@ -16,6 +16,7 @@ Extra runs in the Output folder:
 "Test-1" -> P=0.09, I=0, D=11.7
 "Test-2" -> P=.105 I=0, D=7.9
 "Test-3" -> P=0.079, I=0.0013, D=7.2
+Test runs can be downloaded at https://bit.ly/2rEXVOw
 
 Final Variables Results -> P=0.0797, I=0.0013, D=5.5
 
