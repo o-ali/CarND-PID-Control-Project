@@ -5,11 +5,14 @@ Self-Driving Car Engineer Nanodegree Program
 The project was implemented with a simple PID controller using Total_Error = (-Kp * p_error) - (Kd * d_error) - (Ki * i_error) to direct the steering with a constant throttle of .71 resulting in speeds up to 75 mph.
 During implementation the P, I, and D values were manually adjusted with some help from a 'twiddle' function (bad :( implementation). I initially started with values given in the course which were P=0.2 I=0.004 and D=3.0 then a few twiddle runs resulted in values around P=.19 I=0.008 and D=10, before it started to mess up too badly. From there I started to adjust and test the variable by making small adjustments to them and running the simulator without twiddle.
 
-While adjusting, I realized that the 'P' value increase would make the car shoot back into the middle to correct the CTE more aggresively and result in the car overshooting the sides, a lower value would still allow it to adjust but with a more moderate change. So I ended up with P=0.0797.
+### P-roportional
+While adjusting, I realized that the 'P' value increase would make the car shoot back into the middle to correct the CTE more aggresively and result in the car overshooting the sides, a lower value would still allow it to adjust but with a more moderate change. So I ended up with P=0.0797. More accurately, the P value determines how hard to steer based on the size of the CTE. A higher value will cause faster corrections but can cause the vehicle to lose control if the CTE gets large enough. Using only the P controller, the car will always be at an angle while crossing the CTE and will keep switching sides.
 
-The 'I' value appeared to cause the vehicle to 'slide' left and right and helped to move the car toward the center while it was making turns, it was however very sensitive to any changes so the I value needed to be a small number, so I set it to 0.0013. Large value of I resulted in very large steering values.
+### I-ntegral
+The 'I' or integral causes the vehicle to 'slide' left and right and helps to move the car toward the center, it oberves whether the car is spending too much time on one side and based on the value would slide the car towards the center. It was however very sensitive to any changes so the I value needed to be a small number, so I set it to 0.0013. Large value of I resulted in very large steering values.
 
-The 'D' value controls how much the car will make the small adjustments to stay in the middle. Large D values would result in the steering constantly making adjustments from - to + even while somewhat centered. It did however help control the car in the middle to stop it from overshooting due to the P value so I settled with the value of 5.5.
+### D-erivative
+The 'D' or derivative value applies a resistance to the P value steering. The larger the derivative, the more resistance. Applying the resistance helps control the cars steering, by slowing/lowering it, as it gets closer to the center and helps to avoid the fast steering from the Proportional term. I settled with the value of 5.5.
 
 Extra runs in the Output folder:
 "Test-0" -> P=0.2, I=0.004, D=3.0
